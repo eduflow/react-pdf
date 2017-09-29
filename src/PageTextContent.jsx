@@ -197,6 +197,7 @@ PageTextContent.propTypes = {
     commonObjs: PropTypes.shape({
       objs: PropTypes.object.isRequired,
     }).isRequired,
+    getAnnotations: PropTypes.func.isRequired,
     getTextContent: PropTypes.func.isRequired,
     getViewport: PropTypes.func.isRequired,
     transport: PropTypes.shape({
