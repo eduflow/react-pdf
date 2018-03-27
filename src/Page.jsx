@@ -22,6 +22,7 @@ import { eventsProps, isClassName, isLinkService, isPageIndex, isPageNumber, isP
 export default class Page extends Component {
   state = {
     page: null,
+    scaleChanged: false,
   }
 
   componentDidMount() {
@@ -29,6 +30,9 @@ export default class Page extends Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
+    const { scale } = this.props;
+    const { scale: nextScale } = nextProps;
+
     if (
       nextContext.pdf !== this.context.pdf ||
       this.getPageNumber(nextProps) !== this.getPageNumber()
@@ -43,6 +47,10 @@ export default class Page extends Component {
       }
 
       this.loadPage(nextProps, nextContext);
+    }
+
+    if (scale !== nextScale) {
+      this.setState({scaleChanged: true})
     }
   }
 
@@ -176,13 +184,18 @@ export default class Page extends Component {
   }
 
   get scale() {
-    const { scale, width } = this.props;
-    const { page } = this.state;
+    const { scale, width, initialWidth } = this.props;
+    const { page, scaleChanged } = this.state;
 
     const { rotate } = this;
 
     // Be default, we'll render page at 100% * scale width.
     let pageScale = 1;
+
+    if (initialWidth && !scaleChanged) {
+      const viewport = page.getViewport(scale, rotate);
+      pageScale = initialWidth / viewport.width;
+    }
 
     // If width is defined, calculate the scale of the page so it could be of desired width.
     if (width) {
@@ -402,5 +415,6 @@ Page.propTypes = {
   rotate: isRotate,
   scale: PropTypes.number,
   width: PropTypes.number,
+  initialWidth: PropTypes.number,
   ...eventsProps(),
 };
