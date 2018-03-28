@@ -19,6 +19,7 @@ import { eventsProps } from './shared/propTypes';
 export default class Page extends Component {
   state = {
     page: null,
+    scaleChanged: false,
   }
 
   componentDidMount() {
@@ -26,11 +27,18 @@ export default class Page extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const { scale, pdf } = this.props
+    const { scale: nextScale, pdf: nextPdf } = nextProps
+
     if (
-      nextProps.pdf !== this.props.pdf ||
+      nextPdf !== pdf ||
       this.getPageNumber(nextProps) !== this.getPageNumber()
     ) {
       this.loadPage(nextProps);
+    }
+
+    if (scale !== nextScale) {
+      this.setState({scaleChanged: true})
     }
   }
 
@@ -117,12 +125,17 @@ export default class Page extends Component {
   }
 
   get scale() {
-    const { scale, width } = this.props;
-    const { page } = this.state;
+    const { scale, width, initialWidth } = this.props;
+    const { page, scaleChanged } = this.state;
     const { rotate } = this;
 
     // Be default, we'll render page at 100% * scale width.
     let pageScale = 1;
+
+    if (initialWidth && !scaleChanged) {
+      const viewport = page.getViewport(scale, rotate);
+      pageScale = initialWidth / viewport.width;
+    }
 
     // If width is defined, calculate the scale of the page so it could be of desired width.
     if (width) {
@@ -256,5 +269,6 @@ Page.propTypes = {
   rotate: PropTypes.number,
   scale: PropTypes.number,
   width: PropTypes.number,
+  initialWidth: PropTypes.number,
   ...eventsProps(),
 };
