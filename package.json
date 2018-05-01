@@ -1,5 +1,5 @@
 {
-  "name": "react-pdf",
+  "name": "@peergrade/react-pdf",
   "version": "2.1.6",
   "description": "Easily display PDF files in your React application.",
   "main": "build/entry.js",
@@ -59,6 +59,6 @@
   "files": ["LICENSE", "README.md", "build/", "src/"],
   "repository": {
     "type": "git",
-    "url": "https://github.com/wojtekmaj/react-pdf.git"
+    "url": "https://github.com/peergradeio/react-pdf.git"
   }
 }
