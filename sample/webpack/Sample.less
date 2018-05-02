@@ -52,6 +52,29 @@ body {
             max-width: 100%;
             height: auto !important;
           }
+
+          &__textContent {
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.2;
+            line-height: 1;
+            ::selection {
+              background: rgb(0,0,255);
+            }
+            ::-moz-selection {
+              background: rgb(0,0,255);
+            }
+            & > div {
+              color: transparent;
+              position: absolute;
+              cursor: text;
+              transform-origin: 0% 0%;
+              white-space: pre;
+            }
+          }
         }
 
         &__message {

@@ -14,6 +14,7 @@ class Sample extends Component {
   state = {
     file: './sample.pdf',
     numPages: null,
+    scale: 1,
   }
 
   onFileChange = (event) => {
@@ -27,8 +28,14 @@ class Sample extends Component {
       numPages,
     })
 
+  onScaleChange = (delta) => () => {
+    this.setState({
+      scale: this.state.scale + delta,
+    })
+  }
+
   render() {
-    const { file, numPages } = this.state;
+    const { file, numPages, scale } = this.state;
 
     return (
       <div className="Example">
@@ -42,6 +49,8 @@ class Sample extends Component {
               type="file"
               onChange={this.onFileChange}
             />
+            <button onClick={this.onScaleChange(0.1)}>+</button>
+            <button onClick={this.onScaleChange(-0.1)}>-</button>
           </div>
           <div className="Example__container__document">
             <Document
@@ -56,6 +65,7 @@ class Sample extends Component {
                     <Page
                       key={`page_${index + 1}`}
                       pageNumber={index + 1}
+                      scale={scale}
                     />
                   ),
                 )
