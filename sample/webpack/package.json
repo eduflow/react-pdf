@@ -14,7 +14,7 @@
   "dependencies": {
     "react": "^16.3.0",
     "react-dom": "^16.3.0",
-    "react-pdf": "latest"
+    "@peergrade/react-pdf": "latest"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
