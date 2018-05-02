@@ -83,7 +83,7 @@ export default class Document extends PureComponent {
 
   componentDidMount() {
     this.loadDocument();
-    this.linkService.setViewer(this.viewer);
+    this.linkService.setViewer(this.props.viewer || this.viewer);
   }
 
   componentDidUpdate(prevProps) {
@@ -182,6 +182,9 @@ export default class Document extends PureComponent {
    * Called when a document is read successfully
    */
   onLoadSuccess = () => {
+    if (this.props.viewer) {
+      this.props.viewer.setDocument(this.state.pdf);
+    }
     callIfDefined(
       this.props.onLoadSuccess,
       this.state.pdf,
@@ -310,8 +313,12 @@ export default class Document extends PureComponent {
   }
 
   render() {
-    const { className, file, inputRef } = this.props;
+    const { className, file, inputRef, viewer } = this.props;
     const { pdf } = this.state;
+
+    if (viewer) {
+      return null
+    }
 
     let content;
     if (!file) {
