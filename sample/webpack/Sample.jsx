@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { render } from 'react-dom';
 import { Document, Page } from '@peergrade/react-pdf/dist/entry.webpack';
 import '@peergrade/react-pdf/dist/Page/AnnotationLayer.css';
+import { hot } from 'react-hot-loader';
 
 import './Sample.less';
 
@@ -68,4 +68,4 @@ class Sample extends Component {
   }
 }
 
-render(<Sample />, document.getElementById('react-container'));
+export default hot(module)(Sample);
