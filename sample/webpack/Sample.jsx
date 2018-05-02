@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Document, Page } from '@peergrade/react-pdf/dist/entry.webpack';
-import '@peergrade/react-pdf/dist/Page/AnnotationLayer.css';
 import { hot } from 'react-hot-loader';
+import { Document, Page } from '@peergrade/react-pdf/dist/entry.webpack';
+import { PDFViewer } from 'pdfjs-dist/lib/web/pdf_viewer';
+import '@peergrade/react-pdf/dist/Page/AnnotationLayer.css';
 
 import './Sample.less';
 
@@ -13,8 +14,16 @@ const options = {
 class Sample extends Component {
   state = {
     file: './sample.pdf',
+    viewer: null,
     numPages: null,
-    scale: 1,
+  }
+
+  componentDidMount() {
+    this.setState({
+      viewer: new PDFViewer({
+        container: this.container,
+      }),
+    });
   }
 
   onFileChange = (event) => {
@@ -28,49 +37,49 @@ class Sample extends Component {
       numPages,
     })
 
-  onScaleChange = (delta) => () => {
-    this.setState({
-      scale: this.state.scale + delta,
-    })
+  onScaleChange = (value) => () => {
+    if (typeof value === 'number') {
+      this.state.viewer.currentScale += value;
+    } else {
+      this.state.viewer.currentScaleValue = value;
+    }
   }
 
   render() {
-    const { file, numPages, scale } = this.state;
+    const { file, numPages, scale, viewer } = this.state;
 
     return (
       <div className="Example">
         <header>
           <h1>react-pdf sample page</h1>
         </header>
-        <div className="Example__container">
+        <div>
           <div className="Example__container__load">
-            <label htmlFor="file">Load from file:</label>&nbsp;
+            <label htmlFor="file">Load from file:&nbsp;</label>
             <input
               type="file"
               onChange={this.onFileChange}
             />
             <button onClick={this.onScaleChange(0.1)}>+</button>
             <button onClick={this.onScaleChange(-0.1)}>-</button>
+            <button onClick={this.onScaleChange('page-width')}>page width</button>
+            <button onClick={this.onScaleChange('page-height')}>page height</button>
           </div>
-          <div className="Example__container__document">
-            <Document
-              file={file}
-              onLoadSuccess={this.onDocumentLoadSuccess}
-              options={options}
-            >
-              {
-                Array.from(
-                  new Array(numPages),
-                  (el, index) => (
-                    <Page
-                      key={`page_${index + 1}`}
-                      pageNumber={index + 1}
-                      scale={scale}
-                    />
-                  ),
-                )
-              }
-            </Document>
+          <div
+            className="Example__container"
+            ref={(e) => {
+                this.container = e;
+            }}
+          >
+            <div className="Example__container__document">
+              {viewer && (
+                 <Document
+                   file={file}
+                   onLoadSuccess={this.onDocumentLoadSuccess}
+                   viewer={viewer}
+                 />
+              )}
+            </div>
           </div>
         </div>
       </div>
