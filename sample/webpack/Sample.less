@@ -5,33 +5,32 @@ body {
 }
 
 .Example {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
   input, button {
     font: inherit;
   }
 
-  header {
-    background-color: rgb(50, 54, 57);
-    box-shadow: 0 0 8px rgba(0, 0, 0, .5);
-    padding: 20px;
+  &__toolbar {
     color: white;
-
-    h1 {
-      font-size: inherit;
-      margin: 0;
+    position: relative;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    div {
+      position: relative;
+      height: 32px;
     }
   }
 
   &__container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 10px 0;
-    padding: 10px;
-
-    &__load {
-      margin-top: 1em;
-      color: white;
-    }
+    position: absolute;
+    overflow: auto;
+    top: 32px;
+    left: 0;
+    bottom: 0;
   }
 }
 
@@ -39,6 +38,7 @@ body {
   .page {
     direction: ltr;
     position: relative;
+    overflow: visible;
 
     .canvasWrapper {
       overflow: hidden;

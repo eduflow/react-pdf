@@ -16,6 +16,7 @@ class Sample extends Component {
     file: './sample.pdf',
     viewer: null,
     numPages: null,
+    pageNumber: 1,
   }
 
   componentDidMount() {
@@ -24,6 +25,11 @@ class Sample extends Component {
         container: this.container,
       }),
     });
+
+    this.container.addEventListener('pagechange', ({ pageNumber }) => {
+      this.setState({ pageNumber })
+    })
+
   }
 
   onFileChange = (event) => {
@@ -45,25 +51,29 @@ class Sample extends Component {
     }
   }
 
+  onPageChange = (value) => () => {
+    this.state.viewer.currentPageNumber += value;
+  }
+
   render() {
-    const { file, numPages, scale, viewer } = this.state;
+    const { file, numPages, pageNumber, scale, viewer } = this.state;
 
     return (
-      <div className="Example">
-        <header>
-          <h1>react-pdf sample page</h1>
-        </header>
-        <div>
-          <div className="Example__container__load">
-            <label htmlFor="file">Load from file:&nbsp;</label>
-            <input
-              type="file"
-              onChange={this.onFileChange}
-            />
-            <button onClick={this.onScaleChange(0.1)}>+</button>
-            <button onClick={this.onScaleChange(-0.1)}>-</button>
-            <button onClick={this.onScaleChange('page-width')}>page width</button>
-            <button onClick={this.onScaleChange('page-height')}>page height</button>
+      <div>
+        <div className="Example">
+          <div className="Example__toolbar">
+            <div>
+              <label htmlFor="file">Load from file:&nbsp;</label>
+              <input
+                type="file"
+                onChange={this.onFileChange}
+              />
+              <button onClick={this.onScaleChange(0.1)}>+</button>
+              <button onClick={this.onScaleChange(-0.1)}>-</button>
+              <button onClick={this.onScaleChange('page-width')}>page width</button>
+              <button onClick={this.onScaleChange('page-height')}>page height</button>
+              {numPages && <span>{pageNumber} / {numPages}</span>}
+            </div>
           </div>
           <div
             className="Example__container"
