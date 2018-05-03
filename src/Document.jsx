@@ -124,7 +124,8 @@ export default class Document extends PureComponent {
         }
 
         return { pdf };
-      }, this.onLoadSuccess);
+      });
+      this.onLoadSuccess();
     } catch (error) {
       this.setState({ pdf: false });
       this.onLoadError(error);
